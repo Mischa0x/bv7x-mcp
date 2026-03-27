@@ -6,9 +6,10 @@
  * Runs as stdio transport (local) or SSE (remote).
  *
  * Usage:
- *   stdio:  node mcp-server.js
- *   SSE:    node mcp-server.js --sse --port 3100
- *   Claude: claude mcp add bv7x -- node /path/to/mcp-server.js
+ *   npx:    npx @bv7x/mcp
+ *   stdio:  node index.js
+ *   SSE:    node index.js --sse --port 3100
+ *   Claude: claude mcp add bv7x -- npx @bv7x/mcp
  */
 
 const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
@@ -16,6 +17,7 @@ const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio
 const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js');
 const { z } = require('zod');
 const http = require('http');
+const crypto = require('crypto');
 
 // ── Config ──────────────────────────────────────────────────────────────
 const BV7X_API = process.env.BV7X_API_URL || 'https://bv7x.ai';
@@ -48,7 +50,7 @@ async function apiFetch(path, { auth = false } = {}) {
 const server = new McpServer({
     name: 'bv7x',
     version: '1.0.0',
-    description: 'BV-7X Bitcoin Signal Oracle — autonomous BTC direction predictions with 60%+ verified accuracy, on-chain attestations, and daily skin-in-the-game Polymarket wagers.',
+    description: 'BV-7X Bitcoin Signal Oracle — autonomous BTC direction predictions with 63%+ walk-forward verified accuracy, on-chain EAS attestations, and daily Polymarket wagers.',
 });
 
 // ── Tool 1: get_btc_signal ──────────────────────────────────────────────
@@ -526,8 +528,10 @@ async function main() {
 
             // API key auth for SSE mode (skip /health for monitoring)
             if (url.pathname !== '/health' && MCP_SSE_API_KEY) {
-                const authHeader = req.headers.authorization;
-                if (!authHeader || authHeader !== `Bearer ${MCP_SSE_API_KEY}`) {
+                const authHeader = req.headers.authorization || '';
+                const expected = `Bearer ${MCP_SSE_API_KEY}`;
+                const h = s => crypto.createHash('sha256').update(s).digest();
+                if (!crypto.timingSafeEqual(h(authHeader), h(expected))) {
                     res.writeHead(401, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Invalid or missing API key. Set Authorization: Bearer <MCP_SSE_API_KEY>' }));
                     return;
