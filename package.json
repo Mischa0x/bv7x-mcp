@@ -1,0 +1,35 @@
+{
+  "name": "@bv7x/mcp",
+  "version": "1.0.0",
+  "description": "BV-7X Bitcoin Oracle — MCP server for AI agents. BTC signal predictions, market regime, track record, and on-chain attestation verification.",
+  "main": "index.js",
+  "bin": {
+    "bv7x-mcp": "./index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "bitcoin",
+    "oracle",
+    "ai",
+    "prediction",
+    "bv7x",
+    "polymarket",
+    "eas",
+    "attestation"
+  ],
+  "author": "Mischa0x",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mischa0x/bv7x-mcp"
+  },
+  "homepage": "https://bv7x.ai",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^3.22.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "bv7x",
+  "version": "1.0.0",
+  "description": "BV-7X Bitcoin Oracle — AI-powered BTC predictions with on-chain attestations and real-money Polymarket wagers",
+  "type": "stdio",
+  "command": "node ${CLAUDE_PLUGIN_ROOT}/index.js",
+  "skills": ["bv7x-oracle"],
+  "resources": ["bv7x://agent-card", "bv7x://openapi"],
+  "homepage": "https://bv7x.ai",
+  "repository": "https://github.com/Mischa0x/bv7x-mcp"
+}
